@@ -52,7 +52,7 @@ router.put('/update/:id', async (req, res) =>{
 
 // get product
 
-router.get('/:id', async (req ,res) =>{
+router.get('/:id', async (req ,res) =>{ 
     try {
         const product = await Product.findById(req.params.id);
         if(product){

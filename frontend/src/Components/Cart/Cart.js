@@ -1,11 +1,13 @@
 import { useContext } from "react";
-
+import axios from "axios";
 import Modal from "../Ui/Modal";
 import classes from "./Cart.module.css";
 import CartItem from "./CartItem";
 import cartContext from "../../Store/cart-context";
 
 const Cart = (props) => {
+ 
+
   const cartCtx = useContext(cartContext);
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
@@ -17,6 +19,26 @@ const Cart = (props) => {
 
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
+    const options = {
+      url: 'http://localhost:5000/product/addProduct',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+       
+      },
+      data: {
+        name: item.name,
+        description: item.description,
+        price: item.price,
+      }
+    };
+    axios(options)
+    .then(response => {
+      console.log(response.data._id);
+
+  
+    });
   };
 
   const cartItems = (
@@ -34,12 +56,6 @@ const Cart = (props) => {
     </ul>
   );
 
-  const imprimer = (pdf) =>{
-    var wnd = window.open('http://your-pdf-url');
-    wnd.print();
-     
-  }
-
   return (
     <Modal onClose={props.onClose}>
       {cartItems}
@@ -51,7 +67,7 @@ const Cart = (props) => {
         <button className={classes["button--alt"]} onClick={props.onClose}>
           Close
         </button>
-        {hasItems && <button className={classes.button} onClick={imprimer('https://waytolearnx.com/test.pdf')}>Order</button>}
+        {hasItems && <button className={classes.button}>Order</button>}
       </div>
     </Modal>
   );
